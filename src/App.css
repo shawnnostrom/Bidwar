@@ -1,0 +1,8 @@
+body{
+  background-image: url('./pictures/firebackground.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  widows: 100vw;
+ 
+}

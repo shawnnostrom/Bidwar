@@ -1,0 +1,50 @@
+.bid-page{
+  
+  
+  height: 100vh;
+  widows: 100vw;
+ 
+}
+.nav{
+  background-color: grey;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+.logout{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color:grey;
+  color: white;
+  margin: 0;
+  padding: 0;
+  margin-right: 3%;
+}
+.item-box{
+  height: 300px;
+  width: 300px;
+  border: solid white 2px;
+  background-color: white;
+  opacity: 0.5;
+  margin-top: 2%;
+  margin-left: 2%;
+}
+.items{
+  display: flex;
+  flex-flow: row wrap;
+}
+.item-button{
+  height: 40px;
+  width: 80px;
+  align-self: flex-end;
+}
+.item-picture{
+  height: 150px;
+  width: 150px;
+
+}
+img{
+  height: 150px;
+  width: 150px;
+}
