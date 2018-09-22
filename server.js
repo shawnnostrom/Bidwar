@@ -2,18 +2,22 @@ const express =  require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const users = require('./users');
-//const items = require('./items');
+const service = require('./service')
 
 const app = express();
 
 
+
 app.use(bodyParser.json());
 app.use(cors({ origin: ['http://localhost:3000'] }));
+app.use(require('./router'));
 
 app.get('/health', (req, res) => {
   console.log('ok');
   return res.send('ok')
 });
+
+
 
 app.get('/authenticate-user', (req, res) =>{
   const email = req.query.email;
@@ -32,6 +36,7 @@ app.get('/user/:id', (req, res)=>{
   if (user) return res.send(user);
   return res.status(403).send(`user ${id} not found`)
 })
+
 
 
 

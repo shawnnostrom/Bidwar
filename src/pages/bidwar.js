@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Countdown from 'react-countdown-now';
 import './bidwar.css';
 import axios from 'axios';
 
@@ -8,32 +9,44 @@ import axios from 'axios';
 class Bidwar extends Component{
   state = {
     items:[
-      // {id:1,title:"Test",description:"test",price:1,picture:"https://cdn.vox-cdn.com/thumbor/_4-v-hkd4L9hIVSrJSp2seMTeKo=/0x0:950x623/920x613/filters:focal(399x236:551x388):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/60988327/Xbox_One_X_Screenshot_05.0.jpg"},
-      // {id:2, title:"test2", description:"test2",price:2},
-      // {id:3, title:"test3", description:"test3",price:3}
-      
-    ],
+
+    ]
   }
 
- showItems = () => {
-   axios.get('./items.json')
-   .then(r => r.json())
-   .then(data => this.setState({items:data}))
+ componentDidMount = () => {
+   axios.get('http://localhost:8080/items')
+   .then(res => {
+    
+    this.setState({items:res.data.items}) })
    .catch(error => console.error(error))
  }
 
-  bid = () => {
-
-  }
+   bid = (id) => {
+    axios.put('http://localhost:8080/items',id)
+    .then(res => this.setState({items: res.data.items}))
+    .catch(error => console.log(error))
+   }
 
 
 
   addItem = () => {
     let newItem = {
+      id: this.state.items[this.state.items.length - 1].id +1,
       title: this.title.value,
       description: this.description.value,
-      price: this.price.value
+      price: 1,
+      picture:` ${this.picture.value} `,
+      time: 86400000
     };
+    
+    this.title.value = "" ;
+    this.description.value = "";
+    
+    axios.post('http://localhost:8080/items',newItem)
+    .then(res => {
+      // console.log(res.data)
+      this.setState({items:res.data.items})})
+    .catch(error => console.error(error))
   }
 
   logout = () => {
@@ -42,16 +55,22 @@ class Bidwar extends Component{
 
 
   render() {
-    const items = this.state.items.map(i => {
+    
+    
+
+    const item = this.state.items.map(i=> {
+      const timer = i.time
       return (
         <div key={i.id} className="item-box" >
-          <p>title: {i.title}</p> 
+          <p>{i.title}</p> 
+          <Countdown date ={Date.now() + timer} />
           <img src = {i.picture} className="item-picture" ></img>
-          <p>description: {i.description}</p>
+          <p>{i.description}</p>
           <p>price: {i.price} </p>
-
-          <button className = "item-button" onClick = {this.bid}>Bid</button>
-          <button className = "item-button">Buy Now</button>
+          <div className = "button-parent">
+          <button className = "item-button" onClick = {() => this.bid(i.id)}>Bid</button>
+          {/* <button className = "item-button">Buy Now</button> */}
+          </div>
         </div>
       )
     })
@@ -64,11 +83,41 @@ class Bidwar extends Component{
           <h1>Bid Wars</h1>
           <p> Here you can place your items for sale. Users will bid on the item until the time is up. Current top when time expires wins!</p>
         </div>
-        <button onClick= {this.showItems}>show items</button>
+        
+        <input
+            className="btn-sp"
+            placeholder="title"
+            ref={title => {
+              this.title = title;
+            }}
+          />
+          <input
+          className="btn-sp"
+          placeholder="description"
+          ref={description => {
+            this.description = description;
+          }}
+        />
+        {/* <input
+            className="btn-sp"
+            placeholder="price"
+            ref={price => {
+              this.price = price;
+            }}
+          /> */}
+          <input
+            className="btn-sp"
+            placeholder="picture url"
+            ref={picture => {
+              this.picture = picture;
+            }}
+          />
+          <button onClick = {this.addItem}> Add item</button>
+          
         <div className ="items"> 
-          {items}
-
+          {item}
         </div>
+        
       </div>
     )
   }
